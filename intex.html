@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystisches Erwachen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;1,500&display=swap');
+        
+        body {
+            background-color: #050505;
+            color: #e0d7c6;
+            font-family: 'Lora', serif;
+            overflow-x: hidden;
+        }
+
+        h1, h2 { font-family: 'Cinzel', serif; letter-spacing: 2px; }
+
+        .mystic-bg {
+            background: radial-gradient(circle at center, #1a1a2e 0%, #050505 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .door-card {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: 1px solid rgba(224, 215, 198, 0.2);
+        }
+
+        .door-card:hover {
+            transform: scale(1.05);
+            border-color: #c5a059;
+            box-shadow: 0 0 30px rgba(197, 160, 89, 0.3);
+        }
+
+        .hidden { display: none; opacity: 0; }
+        .fade-in { animation: fadeIn 1.5s forwards; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .staircase {
+            background: linear-gradient(to top, #000, #1a1a2e);
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="page1" class="mystic-bg p-6">
+        <h1 class="text-3xl md:text-5xl mb-8 text-center text-gold-500">Das Buch der Schicksale</h1>
+        <div class="w-full max-w-sm">
+            <input type="text" id="userName" placeholder="Wie lautet dein Name?" 
+                   class="w-full bg-transparent border-b-2 border-stone-700 p-2 text-center text-xl outline-none focus:border-stone-400 transition">
+            <button onclick="toPage2()" class="w-full mt-8 py-3 border border-stone-500 hover:bg-stone-500 hover:text-black transition uppercase tracking-widest">Eintreten</button>
+        </div>
+    </div>
+
+    <div id="page2" class="mystic-bg hidden p-6">
+        <h2 class="text-2xl mb-12 text-center">Wähle deinen Begleiter durch die Nacht</h2>
+        <div class="flex flex-col md:flex-row gap-8">
+            <div onclick="toPage3('den stolzen Wolf')" class="door-card p-10 rounded-t-full text-center">
+                <span class="text-6xl mb-4 block">🐺</span>
+                <p class="uppercase text-sm tracking-tighter">Die Tür des Wolfs</p>
+            </div>
+            <div onclick="toPage3('die mystische Eule')" class="door-card p-10 rounded-t-full text-center">
+                <span class="text-6xl mb-4 block">🦉</span>
+                <p class="uppercase text-sm tracking-tighter">Die Tür der Eule</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="page3" class="mystic-bg hidden p-8 text-center">
+        <div class="max-w-md">
+            <p id="animalStory" class="text-xl italic leading-relaxed mb-10"></p>
+            <input type="text" id="loveName" placeholder="Wer ist deine liebste Person?" 
+                   class="w-full bg-transparent border-b-2 border-stone-700 p-2 text-center text-lg outline-none focus:border-stone-400">
+            <button onclick="toPage4()" class="mt-8 px-8 py-2 border border-stone-500 uppercase text-xs tracking-widest">Das Schicksal binden</button>
+        </div>
+    </div>
+
+    <div id="page4" class="mystic-bg hidden p-8 text-center bg-red-950/10">
+        <div class="max-w-lg">
+            <p id="loveStory" class="text-xl leading-loose mb-12 font-medium"></p>
+            <button onclick="toPage5()" class="animate-pulse text-gold-400 uppercase tracking-[0.3em] text-sm">Das letzte Tor öffnen</button>
+        </div>
+    </div>
+
+    <div id="page5" class="staircase hidden flex-col p-6">
+        <div class="fade-in text-center">
+            <div class="mb-10 text-6xl">🌌</div>
+            <h2 class="text-4xl mb-4">Du steigst empor...</h2>
+            <p class="text-gray-400 max-w-md mx-auto mb-12">Die Welt unter dir wird klein, die Sorgen verblassen. Du siehst die Kontinente wie Spielzeug im Ozean treiben.</p>
+            <div id="godVoice" class="bg-white/5 p-6 rounded-lg border border-white/10 hidden">
+                <p class="text-2xl italic">"So fühlt es sich also an, Gott zu sein..."</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let userName = "";
+        let animalChoice = "";
+
+        function showPage(id) {
+            document.querySelectorAll('.mystic-bg, .staircase').forEach(p => p.classList.add('hidden'));
+            const next = document.getElementById(id);
+            next.classList.remove('hidden');
+            next.classList.add('fade-in');
+        }
+
+        function toPage2() {
+            userName = document.getElementById('userName').value;
+            if(!userName) return alert("Nenne mir deinen Namen.");
+            showPage('page2');
+        }
+
+        function toPage3(animal) {
+            animalChoice = animal;
+            const story = `In den tiefen Nebeln von Uri begegnete ${userName} ${animalChoice}. Das Wesen neigte das Haupt, erkannte die Seele im Gegenüber und flüsterte von uralten Pfaden, die nur jene sehen, die bereit sind, die Dunkelheit zu küssen.`;
+            document.getElementById('animalStory').innerText = story;
+            showPage('page3');
+        }
+
+        function toPage4() {
+            const loveName = document.getElementById('loveName').value;
+            if(!loveName) return alert("Wer begleitet dein Herz?");
+            
+            const story = `Kaum war der Name ${loveName} ausgesprochen, entbrannte zwischen ${userName} und ${loveName} ein wildes Feuer. Ihre Körper verschmolzen im Schatten der Berge, ein Spiel aus Geben und Nehmen, bei dem die Grenzen zwischen Schmerz und Lust gefährlich verschwammen. Es wurde heiß, es wurde eng – ein Verlangen, das so tief bohrte, dass selbst die Felsen von Uri vor Ekstase erzitterten.`;
+            
+            document.getElementById('loveStory').innerText = story;
+            showPage('page4');
+        }
+
+        function toPage5() {
+            showPage('page5');
+            setTimeout(() => {
+                document.getElementById('godVoice').classList.remove('hidden');
+                document.getElementById('godVoice').classList.add('fade-in');
+            }, 3000);
+
+            setTimeout(() => {
+                window.location.href = "https://www.bullenpower-uri.ch";
+            }, 8000);
+        }
+    </script>
+</body>
+</html>
