@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Golden Path | Bullenpower Uri</title>
+    <title>The Golden Fall | Bullenpower Uri</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;1,700&display=swap');
 
         :root {
             --gold: #d4af37;
-            --dark-gold: #aa841e;
             --deep-black: #050505;
         }
 
@@ -19,6 +18,7 @@
             color: #f0e6d2;
             font-family: 'Playfair Display', serif;
             overflow: hidden;
+            margin: 0;
         }
 
         .gold-text {
@@ -28,126 +28,112 @@
             font-family: 'Cinzel', serif;
         }
 
-        .gold-border {
-            border: 1px solid transparent;
-            border-image: linear-gradient(to bottom right, var(--gold), var(--deep-black), var(--dark-gold)) 1;
-        }
-
-        /* Mystischer Hintergrund mit Partikeln */
-        #canvas-bg {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at center, #1a1a2e 0%, #000 100%);
-        }
-
         .page {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: all 1.5s ease;
+            transition: all 1s ease-in-out;
             position: absolute;
             width: 100%;
-            padding: 20px;
+            z-index: 10;
         }
 
-        .hidden { opacity: 0; pointer-events: none; transform: translateY(20px); }
+        .hidden { opacity: 0; pointer-events: none; transform: scale(0.9); }
 
         /* Die goldene Leiter */
         .ladder-container {
-            height: 400px;
-            width: 60px;
-            border-left: 4px solid var(--gold);
-            border-right: 4px solid var(--gold);
+            height: 300px;
+            width: 50px;
+            border-left: 3px solid var(--gold);
+            border-right: 3px solid var(--gold);
             position: relative;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-            animation: climb 10s linear infinite;
+            animation: climb 1.5s linear infinite;
         }
 
         .rung {
             width: 100%;
-            height: 4px;
+            height: 3px;
             background: var(--gold);
-            margin-top: 40px;
-            box-shadow: 0 0 10px var(--gold);
+            margin-top: 50px;
+            box-shadow: 0 0 15px var(--gold);
         }
 
         @keyframes climb {
             from { transform: translateY(0); }
-            to { transform: translateY(80px); }
+            to { transform: translateY(53px); }
         }
 
-        /* Weltkugel Simulation */
-        .earth-glow {
-            width: 300px;
-            height: 300px;
+        /* Weltkugel mit "Fall"-Animation */
+        #earth {
+            width: 400px;
+            height: 400px;
             background: url('https://upload.wikimedia.org/wikipedia/commons/2/22/Earth_Western_Hemisphere_transparent_background.png');
             background-size: cover;
             border-radius: 50%;
-            box-shadow: inset -20px -20px 50px #000, 0 0 50px rgba(0, 100, 255, 0.2);
-            animation: rotate 20s linear infinite;
+            position: absolute;
+            z-index: 1;
+            box-shadow: inset -20px -20px 60px #000, 0 0 40px rgba(212, 175, 55, 0.2);
+            transition: transform 4s cubic-bezier(0.7, 0, 0.3, 1), filter 3s ease-in;
+            transform: scale(0.1); /* Startet ganz klein */
         }
 
-        @keyframes rotate { from { background-position: 0 0; } to { background-position: 600px 0; } }
+        .earth-zoom {
+            transform: scale(15) !important; /* Fällt massiv auf den Nutzer zu */
+            filter: blur(5px);
+        }
+
+        .fade-out { opacity: 0; transition: opacity 1.5s; }
     </style>
 </head>
 <body>
 
-    <canvas id="canvas-bg"></canvas>
-
     <div id="p1" class="page">
-        <h1 class="gold-text text-4xl md:text-6xl mb-12 text-center font-bold">Das Vermächtnis</h1>
-        <div class="gold-border p-8 bg-black/40 backdrop-blur-sm">
+        <h1 class="gold-text text-5xl mb-12 text-center">Das Vermächtnis</h1>
+        <div class="border border-gold/30 p-10 bg-black/60 backdrop-blur-md rounded-lg">
             <input type="text" id="userName" placeholder="Dein Name..." 
-                   class="bg-transparent border-b border-gold p-4 text-center text-2xl outline-none w-64 focus:w-80 transition-all">
-            <button onclick="go(2)" class="block mx-auto mt-10 px-10 py-3 gold-text border border-gold hover:bg-gold/10 transition">Initialisieren</button>
+                   class="bg-transparent border-b border-gold p-4 text-center text-2xl outline-none w-64 text-white">
+            <button onclick="go(2)" class="block mx-auto mt-10 px-12 py-3 gold-text border border-gold hover:bg-gold/10 uppercase tracking-widest transition">Eintreten</button>
         </div>
     </div>
 
     <div id="p2" class="page hidden">
-        <h2 class="gold-text text-2xl mb-16 tracking-[0.5em]">Wähle dein Schicksal</h2>
-        <div class="flex gap-12">
-            <div onclick="setAnimal('Löwe')" class="group cursor-pointer text-center">
-                <div class="gold-border p-12 rounded-full group-hover:bg-gold/20 transition duration-700">
-                    <span class="text-6xl">🦁</span>
-                </div>
-                <p class="mt-4 gold-text opacity-50 uppercase text-xs tracking-widest">Die Macht</p>
+        <h2 class="gold-text text-2xl mb-16 tracking-[0.4em]">Wähle dein Krafttier</h2>
+        <div class="flex gap-16">
+            <div onclick="setAnimal('Bulle')" class="cursor-pointer text-center group">
+                <div class="border border-gold p-14 rounded-full group-hover:bg-gold/20 transition duration-500 text-6xl">🐂</div>
+                <p class="mt-4 gold-text text-xs tracking-widest">DER BULLE</p>
             </div>
-            <div onclick="setAnimal('Adler')" class="group cursor-pointer text-center">
-                <div class="gold-border p-12 rounded-full group-hover:bg-gold/20 transition duration-700">
-                    <span class="text-6xl">🦅</span>
-                </div>
-                <p class="mt-4 gold-text opacity-50 uppercase text-xs tracking-widest">Die Freiheit</p>
+            <div onclick="setAnimal('Schlange')" class="cursor-pointer text-center group">
+                <div class="border border-gold p-14 rounded-full group-hover:bg-gold/20 transition duration-500 text-6xl">🐍</div>
+                <p class="mt-4 gold-text text-xs tracking-widest">DIE VERFÜHRUNG</p>
             </div>
         </div>
     </div>
 
-    <div id="p3" class="page hidden text-center max-w-2xl">
-        <p id="t1" class="text-2xl italic leading-relaxed mb-12"></p>
-        <div class="gold-border p-6 inline-block">
-            <input type="text" id="loveName" placeholder="Name deiner Liebsten..." 
-                   class="bg-transparent border-b border-gold p-2 text-center outline-none">
-            <button onclick="go(4)" class="ml-4 gold-text">Besiegeln</button>
-        </div>
+    <div id="p3" class="page hidden text-center px-6">
+        <p id="t1" class="text-3xl italic leading-relaxed max-w-xl mb-12 gold-text"></p>
+        <input type="text" id="loveName" placeholder="Name deiner Liebsten..." 
+               class="bg-transparent border-b border-gold p-2 text-center outline-none text-xl mb-8">
+        <button onclick="go(4)" class="block mx-auto gold-text border border-gold/50 px-6 py-2">Schicksal weben</button>
     </div>
 
-    <div id="p4" class="page hidden text-center max-w-3xl">
-        <p id="t2" class="text-2xl leading-loose gold-text font-serif"></p>
-        <button onclick="go(5)" class="mt-20 py-4 px-12 bg-white/5 border border-gold/30 gold-text hover:border-gold transition">Die Leiter erklimmen</button>
+    <div id="p4" class="page hidden text-center px-6">
+        <p id="t2" class="text-2xl leading-loose max-w-3xl italic font-serif"></p>
+        <button onclick="startAscension()" class="mt-20 py-5 px-16 border border-gold gold-text animate-pulse hover:bg-gold hover:text-black transition duration-500">ZUR GÖTTLICHKEIT</button>
     </div>
 
-    <div id="p5" class="page hidden">
-        <div class="earth-glow mb-20"></div>
+    <div id="p5" class="page hidden overflow-hidden">
+        <div id="earth"></div>
         
-        <div class="ladder-container">
-            <div class="rung"></div><div class="rung"></div><div class="rung"></div><div class="rung"></div><div class="rung"></div>
-        </div>
-
-        <div id="godVoice" class="mt-16 text-3xl italic gold-text opacity-0 transition-opacity duration-[3000ms]">
-            "So fühlt es sich also an, Gott zu sein..."
+        <div id="ui-overlay" class="text-center z-20 transition-opacity duration-1000">
+            <div class="ladder-container mx-auto">
+                <div class="rung"></div><div class="rung"></div><div class="rung"></div><div class="rung"></div><div class="rung"></div>
+            </div>
+            <div class="mt-12 text-4xl italic gold-text">
+                "So fühlt es sich also an, Gott zu sein..."
+            </div>
         </div>
     </div>
 
@@ -155,55 +141,43 @@
         let u = "", a = "";
 
         function go(n) {
-            if(n==2) u = document.getElementById('userName').value;
-            if(!u && n==2) return;
-            
             document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
             document.getElementById('p'+n).classList.remove('hidden');
 
             if(n==4) {
-                const l = document.getElementById('loveName').value;
-                document.getElementById('t2').innerText = `${u} und ${l} verloren jede Kontrolle. In den goldenen Hallen von Uri verschmolzen ihre Sehnsüchte zu einem wilden, zweideutigen Spiel. Jeder Griff saß, jedes Flüstern wurde zum Beben, bis der Gipfel der Ekstase die Sterne selbst berührte.`;
-            }
-
-            if(n==5) {
-                setTimeout(() => document.getElementById('godVoice').style.opacity = 1, 2000);
-                setTimeout(() => window.location.href = "https://www.bullenpower-uri.ch", 9000);
+                const l = document.getElementById('loveName').value || "deine Muse";
+                document.getElementById('t2').innerText = `${u} und ${l} fanden sich in einem Sog aus purem Verlangen wieder. Zwischen den Berggipfeln von Uri gab es kein Halten mehr – Hände, die erkundeten, Lippen, die forderten, und eine Leidenschaft, die so ungezähmt war, dass die Welt um sie herum in einem goldenen Rausch versank. Es war wild, es war grenzenlos, es war absolut.`;
             }
         }
 
         function setAnimal(choice) {
             a = choice;
-            document.getElementById('t1').innerText = `Als ${u} die Tür des ${a}s öffnete, erzitterte der Boden. Es war kein Zufall – es war Bestimmung. Dein Weg beginnt hier, zwischen Mythos und purer Kraft.`;
+            u = document.getElementById('userName').value;
+            document.getElementById('t1').innerText = `Der ${a} hat dich erwählt, ${u}. Eine Kraft, die tiefer liegt als der Urnersee und heißer brennt als die Mittagssonne.`;
             go(3);
         }
 
-        // Simpler Sternenhimmel Canvas
-        const canvas = document.getElementById('canvas-bg');
-        const ctx = canvas.getContext('2d');
-        let stars = [];
+        function startAscension() {
+            go(5);
+            const earth = document.getElementById('earth');
+            const ui = document.getElementById('ui-overlay');
 
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            // Erst schwebt die Erde klein im Hintergrund (Gott-Perspektive)
+            setTimeout(() => {
+                earth.style.transform = "scale(1)";
+            }, 500);
+
+            // Nach 4 Sekunden beginnt der "Fall"
+            setTimeout(() => {
+                ui.classList.add('fade-out');
+                earth.classList.add('earth-zoom');
+            }, 4500);
+
+            // Weiterleitung nach dem Aufprall
+            setTimeout(() => {
+                window.location.href = "https://www.bullenpower-uri.ch";
+            }, 8000);
         }
-
-        window.onresize = resize;
-        resize();
-
-        for(let i=0; i<200; i++) stars.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*1.5});
-
-        function draw() {
-            ctx.clearRect(0,0,canvas.width, canvas.height);
-            ctx.fillStyle = "white";
-            stars.forEach(s => {
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-                ctx.fill();
-            });
-            requestAnimationFrame(draw);
-        }
-        draw();
     </script>
 </body>
 </html>
