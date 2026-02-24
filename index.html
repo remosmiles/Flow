@@ -3,155 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mystisches Erwachen</title>
+    <title>The Golden Path | Bullenpower Uri</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;1,500&display=swap');
-        
-        body {
-            background-color: #050505;
-            color: #e0d7c6;
-            font-family: 'Lora', serif;
-            overflow-x: hidden;
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;1,700&display=swap');
+
+        :root {
+            --gold: #d4af37;
+            --dark-gold: #aa841e;
+            --deep-black: #050505;
         }
 
-        h1, h2 { font-family: 'Cinzel', serif; letter-spacing: 2px; }
+        body {
+            background-color: var(--deep-black);
+            color: #f0e6d2;
+            font-family: 'Playfair Display', serif;
+            overflow: hidden;
+        }
 
-        .mystic-bg {
-            background: radial-gradient(circle at center, #1a1a2e 0%, #050505 100%);
+        .gold-text {
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa841e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Cinzel', serif;
+        }
+
+        .gold-border {
+            border: 1px solid transparent;
+            border-image: linear-gradient(to bottom right, var(--gold), var(--deep-black), var(--dark-gold)) 1;
+        }
+
+        /* Mystischer Hintergrund mit Partikeln */
+        #canvas-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #000 100%);
+        }
+
+        .page {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 1s ease-in-out;
-        }
-
-        .door-card {
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            border: 1px solid rgba(224, 215, 198, 0.2);
-        }
-
-        .door-card:hover {
-            transform: scale(1.05);
-            border-color: #c5a059;
-            box-shadow: 0 0 30px rgba(197, 160, 89, 0.3);
-        }
-
-        .hidden { display: none; opacity: 0; }
-        .fade-in { animation: fadeIn 1.5s forwards; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .staircase {
-            background: linear-gradient(to top, #000, #1a1a2e);
-            height: 100vh;
+            transition: all 1.5s ease;
+            position: absolute;
             width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
+            padding: 20px;
         }
+
+        .hidden { opacity: 0; pointer-events: none; transform: translateY(20px); }
+
+        /* Die goldene Leiter */
+        .ladder-container {
+            height: 400px;
+            width: 60px;
+            border-left: 4px solid var(--gold);
+            border-right: 4px solid var(--gold);
+            position: relative;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            animation: climb 10s linear infinite;
+        }
+
+        .rung {
+            width: 100%;
+            height: 4px;
+            background: var(--gold);
+            margin-top: 40px;
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        @keyframes climb {
+            from { transform: translateY(0); }
+            to { transform: translateY(80px); }
+        }
+
+        /* Weltkugel Simulation */
+        .earth-glow {
+            width: 300px;
+            height: 300px;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/2/22/Earth_Western_Hemisphere_transparent_background.png');
+            background-size: cover;
+            border-radius: 50%;
+            box-shadow: inset -20px -20px 50px #000, 0 0 50px rgba(0, 100, 255, 0.2);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate { from { background-position: 0 0; } to { background-position: 600px 0; } }
     </style>
 </head>
 <body>
 
-    <div id="page1" class="mystic-bg p-6">
-        <h1 class="text-3xl md:text-5xl mb-8 text-center text-gold-500">Das Buch der Schicksale</h1>
-        <div class="w-full max-w-sm">
-            <input type="text" id="userName" placeholder="Wie lautet dein Name?" 
-                   class="w-full bg-transparent border-b-2 border-stone-700 p-2 text-center text-xl outline-none focus:border-stone-400 transition">
-            <button onclick="toPage2()" class="w-full mt-8 py-3 border border-stone-500 hover:bg-stone-500 hover:text-black transition uppercase tracking-widest">Eintreten</button>
+    <canvas id="canvas-bg"></canvas>
+
+    <div id="p1" class="page">
+        <h1 class="gold-text text-4xl md:text-6xl mb-12 text-center font-bold">Das Vermächtnis</h1>
+        <div class="gold-border p-8 bg-black/40 backdrop-blur-sm">
+            <input type="text" id="userName" placeholder="Dein Name..." 
+                   class="bg-transparent border-b border-gold p-4 text-center text-2xl outline-none w-64 focus:w-80 transition-all">
+            <button onclick="go(2)" class="block mx-auto mt-10 px-10 py-3 gold-text border border-gold hover:bg-gold/10 transition">Initialisieren</button>
         </div>
     </div>
 
-    <div id="page2" class="mystic-bg hidden p-6">
-        <h2 class="text-2xl mb-12 text-center">Wähle deinen Begleiter durch die Nacht</h2>
-        <div class="flex flex-col md:flex-row gap-8">
-            <div onclick="toPage3('den stolzen Wolf')" class="door-card p-10 rounded-t-full text-center">
-                <span class="text-6xl mb-4 block">🐺</span>
-                <p class="uppercase text-sm tracking-tighter">Die Tür des Wolfs</p>
+    <div id="p2" class="page hidden">
+        <h2 class="gold-text text-2xl mb-16 tracking-[0.5em]">Wähle dein Schicksal</h2>
+        <div class="flex gap-12">
+            <div onclick="setAnimal('Löwe')" class="group cursor-pointer text-center">
+                <div class="gold-border p-12 rounded-full group-hover:bg-gold/20 transition duration-700">
+                    <span class="text-6xl">🦁</span>
+                </div>
+                <p class="mt-4 gold-text opacity-50 uppercase text-xs tracking-widest">Die Macht</p>
             </div>
-            <div onclick="toPage3('die mystische Eule')" class="door-card p-10 rounded-t-full text-center">
-                <span class="text-6xl mb-4 block">🦉</span>
-                <p class="uppercase text-sm tracking-tighter">Die Tür der Eule</p>
+            <div onclick="setAnimal('Adler')" class="group cursor-pointer text-center">
+                <div class="gold-border p-12 rounded-full group-hover:bg-gold/20 transition duration-700">
+                    <span class="text-6xl">🦅</span>
+                </div>
+                <p class="mt-4 gold-text opacity-50 uppercase text-xs tracking-widest">Die Freiheit</p>
             </div>
         </div>
     </div>
 
-    <div id="page3" class="mystic-bg hidden p-8 text-center">
-        <div class="max-w-md">
-            <p id="animalStory" class="text-xl italic leading-relaxed mb-10"></p>
-            <input type="text" id="loveName" placeholder="Wer ist deine liebste Person?" 
-                   class="w-full bg-transparent border-b-2 border-stone-700 p-2 text-center text-lg outline-none focus:border-stone-400">
-            <button onclick="toPage4()" class="mt-8 px-8 py-2 border border-stone-500 uppercase text-xs tracking-widest">Das Schicksal binden</button>
+    <div id="p3" class="page hidden text-center max-w-2xl">
+        <p id="t1" class="text-2xl italic leading-relaxed mb-12"></p>
+        <div class="gold-border p-6 inline-block">
+            <input type="text" id="loveName" placeholder="Name deiner Liebsten..." 
+                   class="bg-transparent border-b border-gold p-2 text-center outline-none">
+            <button onclick="go(4)" class="ml-4 gold-text">Besiegeln</button>
         </div>
     </div>
 
-    <div id="page4" class="mystic-bg hidden p-8 text-center bg-red-950/10">
-        <div class="max-w-lg">
-            <p id="loveStory" class="text-xl leading-loose mb-12 font-medium"></p>
-            <button onclick="toPage5()" class="animate-pulse text-gold-400 uppercase tracking-[0.3em] text-sm">Das letzte Tor öffnen</button>
-        </div>
+    <div id="p4" class="page hidden text-center max-w-3xl">
+        <p id="t2" class="text-2xl leading-loose gold-text font-serif"></p>
+        <button onclick="go(5)" class="mt-20 py-4 px-12 bg-white/5 border border-gold/30 gold-text hover:border-gold transition">Die Leiter erklimmen</button>
     </div>
 
-    <div id="page5" class="staircase hidden flex-col p-6">
-        <div class="fade-in text-center">
-            <div class="mb-10 text-6xl">🌌</div>
-            <h2 class="text-4xl mb-4">Du steigst empor...</h2>
-            <p class="text-gray-400 max-w-md mx-auto mb-12">Die Welt unter dir wird klein, die Sorgen verblassen. Du siehst die Kontinente wie Spielzeug im Ozean treiben.</p>
-            <div id="godVoice" class="bg-white/5 p-6 rounded-lg border border-white/10 hidden">
-                <p class="text-2xl italic">"So fühlt es sich also an, Gott zu sein..."</p>
-            </div>
+    <div id="p5" class="page hidden">
+        <div class="earth-glow mb-20"></div>
+        
+        <div class="ladder-container">
+            <div class="rung"></div><div class="rung"></div><div class="rung"></div><div class="rung"></div><div class="rung"></div>
+        </div>
+
+        <div id="godVoice" class="mt-16 text-3xl italic gold-text opacity-0 transition-opacity duration-[3000ms]">
+            "So fühlt es sich also an, Gott zu sein..."
         </div>
     </div>
 
     <script>
-        let userName = "";
-        let animalChoice = "";
+        let u = "", a = "";
 
-        function showPage(id) {
-            document.querySelectorAll('.mystic-bg, .staircase').forEach(p => p.classList.add('hidden'));
-            const next = document.getElementById(id);
-            next.classList.remove('hidden');
-            next.classList.add('fade-in');
-        }
-
-        function toPage2() {
-            userName = document.getElementById('userName').value;
-            if(!userName) return alert("Nenne mir deinen Namen.");
-            showPage('page2');
-        }
-
-        function toPage3(animal) {
-            animalChoice = animal;
-            const story = `In den tiefen Nebeln von Uri begegnete ${userName} ${animalChoice}. Das Wesen neigte das Haupt, erkannte die Seele im Gegenüber und flüsterte von uralten Pfaden, die nur jene sehen, die bereit sind, die Dunkelheit zu küssen.`;
-            document.getElementById('animalStory').innerText = story;
-            showPage('page3');
-        }
-
-        function toPage4() {
-            const loveName = document.getElementById('loveName').value;
-            if(!loveName) return alert("Wer begleitet dein Herz?");
+        function go(n) {
+            if(n==2) u = document.getElementById('userName').value;
+            if(!u && n==2) return;
             
-            const story = `Kaum war der Name ${loveName} ausgesprochen, entbrannte zwischen ${userName} und ${loveName} ein wildes Feuer. Ihre Körper verschmolzen im Schatten der Berge, ein Spiel aus Geben und Nehmen, bei dem die Grenzen zwischen Schmerz und Lust gefährlich verschwammen. Es wurde heiß, es wurde eng – ein Verlangen, das so tief bohrte, dass selbst die Felsen von Uri vor Ekstase erzitterten.`;
-            
-            document.getElementById('loveStory').innerText = story;
-            showPage('page4');
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            document.getElementById('p'+n).classList.remove('hidden');
+
+            if(n==4) {
+                const l = document.getElementById('loveName').value;
+                document.getElementById('t2').innerText = `${u} und ${l} verloren jede Kontrolle. In den goldenen Hallen von Uri verschmolzen ihre Sehnsüchte zu einem wilden, zweideutigen Spiel. Jeder Griff saß, jedes Flüstern wurde zum Beben, bis der Gipfel der Ekstase die Sterne selbst berührte.`;
+            }
+
+            if(n==5) {
+                setTimeout(() => document.getElementById('godVoice').style.opacity = 1, 2000);
+                setTimeout(() => window.location.href = "https://www.bullenpower-uri.ch", 9000);
+            }
         }
 
-        function toPage5() {
-            showPage('page5');
-            setTimeout(() => {
-                document.getElementById('godVoice').classList.remove('hidden');
-                document.getElementById('godVoice').classList.add('fade-in');
-            }, 3000);
-
-            setTimeout(() => {
-                window.location.href = "https://www.bullenpower-uri.ch";
-            }, 8000);
+        function setAnimal(choice) {
+            a = choice;
+            document.getElementById('t1').innerText = `Als ${u} die Tür des ${a}s öffnete, erzitterte der Boden. Es war kein Zufall – es war Bestimmung. Dein Weg beginnt hier, zwischen Mythos und purer Kraft.`;
+            go(3);
         }
+
+        // Simpler Sternenhimmel Canvas
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.onresize = resize;
+        resize();
+
+        for(let i=0; i<200; i++) stars.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*1.5});
+
+        function draw() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = "white";
+            stars.forEach(s => {
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+                ctx.fill();
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
     </script>
 </body>
 </html>
